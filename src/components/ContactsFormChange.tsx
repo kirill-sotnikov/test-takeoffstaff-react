@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { addContact } from "../store/SliceContacts";
-import { hide } from "../store/SliceShowHideFormAdd";
+import { changeContact } from "../store/SliceContacts";
 const ContactsFormAddDiv = styled.div`
   width: 100%;
   background-color: #f2afaf;
@@ -20,12 +19,13 @@ const DivForm = styled.form`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 2px;
 `;
 
 const FormName = styled.input`
   color: #000000;
   margin-left: 21px;
-  width: 33%;
+  width: 40%;
   background-color: rgba(0, 0, 0, 0);
   border: none;
   border-bottom: 1px solid black;
@@ -46,36 +46,29 @@ const FormPhone = styled.input`
   font-size: 18px;
 `;
 
-const FormIconConfirm = styled.img`
-  cursor: pointer;
-  margin-top: 8px;
-`;
-
-const FormIconCancel = styled.img`
+const FormIcon = styled.img`
   margin-right: 21px;
   cursor: pointer;
   margin-top: 8px;
 `;
 
 const FormButtonConfirm = styled.button`
-  margin-right: 21px;
   background-color: transparent;
   border: none;
 `;
 
-const UnderLine = styled.div`
-  border: 0.5px solid black;
-  width: 35%;
-  border-radius: 37px;
-  margin-top: 13px;
-`;
-
 // const ContactsFormAddDivForm
+interface propsType {
+  id: number | string;
+  setChangeActive: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export default function ContactsFormAdd() {
+export default function ContactsFormChange({ id, setChangeActive }: propsType) {
   const [name, setName] = useState<string>();
   const [phone, setPhone] = useState<string>();
-  const showStatus = useAppSelector((state) => state.showHideFormAdd.value);
+  const contact = useAppSelector(
+    (state) => state.contacts.value.filter((item) => item.id === id)[0]
+  );
   const dispatch = useAppDispatch();
   const [correctPhone, setCorrectPhone] = useState<string>();
 
@@ -83,19 +76,14 @@ export default function ContactsFormAdd() {
     console.log(name);
     console.log(phone);
   });
+  useEffect(() => {
+    setPhone(contact.phone.split(" ").join(""));
+    setName(contact.name);
+  }, []);
 
-  function createContact() {
-    if (name && phone && correctPhone) {
-      dispatch(
-        addContact({
-          name: name,
-          phone: correctPhone,
-          id: Date.now(),
-        })
-      );
-      dispatch(hide());
-      setName("");
-      setPhone("");
+  function onChangeContact() {
+    if (name && correctPhone && phone) {
+      dispatch(changeContact({ name: name, phone: correctPhone, id: id }));
     }
   }
 
@@ -130,40 +118,39 @@ export default function ContactsFormAdd() {
   useEffect(() => {
     createCorrectPhone();
   }, [phone]);
-  if (showStatus) {
-    return (
-      <>
-        <ContactsFormAddDiv>
-          <DivForm>
-            <FormName
-              placeholder="Name"
-              onChange={(e) => setName(e.target.value)}
+
+  return (
+    <>
+      <ContactsFormAddDiv>
+        <DivForm>
+          <FormName
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <FormPhone
+            placeholder="Phone: 89208007761"
+            type="number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+          <div>
+            <FormButtonConfirm
+              type="submit"
+              onClick={() => {
+                onChangeContact();
+                setChangeActive(false);
+              }}
+            >
+              <FormIcon src="img/confirmICON.svg" />
+            </FormButtonConfirm>
+            <FormIcon
+              src="img/cancelICON.svg"
+              onClick={() => setChangeActive(false)}
             />
-            <FormPhone
-              placeholder="Phone: 89208007761"
-              type="number"
-              onChange={(e) => setPhone(e.target.value)}
-            />
-            <div>
-              <FormButtonConfirm
-                type="submit"
-                onClick={(e) => {
-                  e.preventDefault();
-                  createContact();
-                }}
-              >
-                <FormIconConfirm src="img/confirmICON.svg" />
-              </FormButtonConfirm>
-              <FormIconCancel
-                src="img/cancelICON.svg"
-                onClick={() => dispatch(hide())}
-              />
-            </div>
-          </DivForm>
-        </ContactsFormAddDiv>
-        <UnderLine />
-      </>
-    );
-  }
-  return null;
+          </div>
+        </DivForm>
+      </ContactsFormAddDiv>
+    </>
+  );
 }

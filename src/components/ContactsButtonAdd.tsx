@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import styled from "styled-components";
-
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { show } from "../store/SliceShowHideFormAdd";
 const ContactsButtonAddDiv = styled.div`
   width: 100%;
   background-color: #f2afaf;
@@ -17,10 +19,29 @@ const ContactsButtonAddDivPlus = styled.h1`
   font-weight: 200;
 `;
 
+const UnderLine = styled.div`
+  border: 0.5px solid black;
+  width: 35%;
+  border-radius: 37px;
+  margin-top: 13px;
+`;
+
 export default function ContactsButtonAdd() {
-  return (
-    <ContactsButtonAddDiv>
-      <ContactsButtonAddDivPlus>+</ContactsButtonAddDivPlus>
-    </ContactsButtonAddDiv>
-  );
+  const showStatus = useAppSelector((state) => state.showHideFormAdd.value);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    console.log("showStatus: ", showStatus);
+  });
+
+  if (!showStatus) {
+    return (
+      <>
+        <ContactsButtonAddDiv onClick={() => dispatch(show())}>
+          <ContactsButtonAddDivPlus>+</ContactsButtonAddDivPlus>
+        </ContactsButtonAddDiv>
+        <UnderLine />
+      </>
+    );
+  }
+  return null;
 }

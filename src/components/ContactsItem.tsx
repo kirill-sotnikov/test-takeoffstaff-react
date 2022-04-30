@@ -1,4 +1,8 @@
+import { useState } from "react";
 import styled from "styled-components";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { deleteContact } from "../store/SliceContacts";
+import ContactsFormChange from "./ContactsFormChange";
 
 const ContactsItemDiv = styled.div`
   width: 100%;
@@ -15,11 +19,14 @@ const ContactsItemDiv = styled.div`
 const ContactsItemDivName = styled.p`
   color: #000000;
   margin-left: 21px;
-  width: 40%;
+  width: 39%;
+  font-size: 18px;
 `;
 
 const ContactsItemDivPhone = styled.p`
   color: #000000;
+  font-size: 18px;
+  margin-right: 15%;
 `;
 
 const ContactsItemDivIcon = styled.img`
@@ -27,28 +34,30 @@ const ContactsItemDivIcon = styled.img`
   cursor: pointer;
 `;
 
-const UnderLine = styled.div`
-  border: 0.5px solid black;
-  width: 35%;
-  border-radius: 37px;
-  margin-top: 13px;
-`;
+export default function ContactsItem({ id }: { id: string | number }) {
+  const contact = useAppSelector(
+    (state) => state.contacts.value.filter((item) => item.id === id)[0]
+  );
+  const dispatch = useAppDispatch();
+  const [changeActive, setChangeActive] = useState<boolean>(false);
 
-export default function ContactsItem() {
+  if (changeActive) {
+    return <ContactsFormChange id={id} setChangeActive={setChangeActive} />;
+  }
+
   return (
     <>
-      <UnderLine />
       <ContactsItemDiv>
-        <ContactsItemDivName>Valeriy Sotnikov Sergeevich</ContactsItemDivName>
-        <ContactsItemDivPhone>8 917 878 99 00</ContactsItemDivPhone>
+        <ContactsItemDivName>{contact.name}</ContactsItemDivName>
+        <ContactsItemDivPhone>{contact.phone}</ContactsItemDivPhone>
         <div>
           <ContactsItemDivIcon
             src="img/changeICON.svg"
-            onClick={() => console.log("Click change")}
+            onClick={() => setChangeActive(true)}
           />
           <ContactsItemDivIcon
             src="img/deleteICON.svg"
-            onClick={() => console.log("Click delte")}
+            onClick={() => dispatch(deleteContact(id))}
           />
         </div>
       </ContactsItemDiv>

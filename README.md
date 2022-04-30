@@ -17,3 +17,14 @@ json-server --watch db.json --port 3004
 данная команда запустит json server на 3004 порту.
 
 Готово! Проект запущен. Осталось только перейти на localhost:3000
+
+## Информация о проекте
+
+Использовалась node.js v16.13.1
+
+Также использовались :
+React,
+TypeScript,
+Axios,
+styled-components,
+Redux.
