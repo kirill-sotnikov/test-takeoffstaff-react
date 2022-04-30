@@ -10,10 +10,7 @@ interface IinitialState {
 }
 
 const initialState: IinitialState = {
-  value: [
-    { name: "Philip Voronin", phone: "8 911 881 99 00", id: 1 },
-    { name: "Andreev Valeriy Anatolievich", phone: "8 917 891 88 00", id: 2 },
-  ],
+  value: [],
 };
 
 function changeContactInValue(state: Contact[], user: Contact): Contact[] {
