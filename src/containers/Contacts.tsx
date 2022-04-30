@@ -19,10 +19,14 @@ const ContainerTitle = styled.h1`
 `;
 
 export default function Contacts() {
-  return (
-    <ContactsContainer>
-      <ContainerTitle>Contacts</ContainerTitle>
-      <ContactsList />
-    </ContactsContainer>
-  );
+  const isKey = localStorage.getItem("superKey");
+  if (isKey === "aasdascazcahbshbdkqjwnjnkdjnjknask") {
+    return (
+      <ContactsContainer>
+        <ContainerTitle>Contacts</ContainerTitle>
+        <ContactsList />
+      </ContactsContainer>
+    );
+  }
+  return null;
 }

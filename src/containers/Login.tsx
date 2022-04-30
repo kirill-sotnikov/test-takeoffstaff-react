@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import LoginForm from "../components/LoginForm";
 
@@ -23,6 +23,9 @@ const ContainerImg = styled.img`
 `;
 
 export default function Login() {
+  useEffect(() => {
+    localStorage.removeItem("superKey");
+  });
   return (
     <LoginContainer>
       <ContainerImg src="img/loginPIC.svg" width="100px" height="100px" />

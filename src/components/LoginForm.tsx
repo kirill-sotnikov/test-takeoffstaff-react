@@ -63,6 +63,7 @@ export default function LoginForm() {
 
     if (user && user.password === password) {
       setLogined(true);
+      localStorage.setItem("superKey", "aasdascazcahbshbdkqjwnjnkdjnjknask");
     } else {
       setLogined(false);
     }
